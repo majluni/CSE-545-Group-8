@@ -10,21 +10,21 @@ class ExtendedUserCreationForm(UserCreationForm):
 
     class Meta:
         model=User
-        fields=('username', 'email', 'first_name', 'last_name')
+        fields=('email', 'first_name', 'last_name')
 
-    def save(self,commit=True):
+    def save(self):
         user = super().save(commit=False)
         user.email=self.cleaned_data['email']
+        user.username=user.email
         user.first_name=self.cleaned_data['first_name']
         user.last_name=self.cleaned_data['last_name']
-        if commit:
-            user.save()
+        user.save()
         return user
 
 class UserProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields=('business_name', 'street_address', 'city', 'state', 'zip_code', 'mobile_number', 'birthdate', 'ssn', 'user_type')
+        fields=('street_address', 'city', 'state', 'zip_code', 'mobile_number', 'birthdate', 'ssn')
 
 class AccountForm(forms.ModelForm):
     class Meta:

@@ -3,9 +3,9 @@ from django.http import HttpResponseRedirect
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login
 from datetime import datetime
+from create_account import forms
 
 from .forms import LoginForm
-
 def login_user(request):
     if request.method=='POST':
         form = LoginForm(request.POST)
@@ -23,6 +23,7 @@ def login_user(request):
 
     else:
         form = LoginForm()
+        account_form=forms.AccountForm
 
-    return render(request, 'login.html', {'form':form})
+    return render(request, 'login.html', {'form':form, 'account_form':account_form})
 

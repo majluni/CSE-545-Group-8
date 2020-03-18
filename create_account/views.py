@@ -16,12 +16,12 @@ def homepage(request):
             user= form.save()
             acc=account_form.save(commit=False)
             profile=profile_form.save(commit=False)
-            profile.user=request.user
+            profile.user=user
             acc.user=profile.user
             profile.save()
             acc.save()
 
-            username = form.cleaned_data.get('username')
+            username = form.cleaned_data.get('email')
             password = form.cleaned_data.get('password')
             user=authenticate(username=username, password=password)
             return HttpResponseRedirect('/login/')

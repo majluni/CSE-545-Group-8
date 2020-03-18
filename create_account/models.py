@@ -6,12 +6,7 @@ from datetime import datetime
 
         
 class Profile(models.Model):
-    USER_TYPE = (
-    ('personal','PERSONAL'),
-    ('business', 'BUSINESS'),
-    )
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    business_name = models.CharField(max_length=50)
     street_address = models.CharField(max_length=20)
     city = models.CharField(max_length=20)
     state = models.CharField(max_length=20)
@@ -19,19 +14,18 @@ class Profile(models.Model):
     mobile_number = models.CharField(max_length=10)
     birthdate = models.DateTimeField()
     ssn = models.CharField(max_length=9)
-    user_type = models.CharField(max_length=10, choices=USER_TYPE)
     joining_date = models.DateTimeField(default=datetime.now)
     
-    # def __str__(self):
-    #     if self.user:
-    #         return self.user.first_name
-    #     else:
-    #         return self.business_name
+    def __str__(self):
+        if self.user:
+            return self.user.email
+        else:
+            return self.business_name
 
 class Account(models.Model):
     ACCOUNT_TYPE = (
     ('savings','SAVINGS'),
-    ('business', 'BUSINESS'),
+    ('checking', 'CHECKING'),
     ('credit_card','CREDIT_CARD'),
     )
     account_type = models.CharField(max_length=20, choices=ACCOUNT_TYPE)
