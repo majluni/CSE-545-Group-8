@@ -11,7 +11,6 @@ def homepage(request):
         form = ExtendedUserCreationForm(request.POST)
         profile_form = UserProfileForm(request.POST)
         account_form =AccountForm(request.POST)
-        print("\n")
         if form.is_valid() and profile_form.is_valid() and account_form.is_valid():
             user= form.save()
             acc=account_form.save(commit=False)
