@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from .models import Profile, Account
+from home import models
 
 class ExtendedUserCreationForm(UserCreationForm):
     email=forms.EmailField(required=True)
@@ -23,11 +23,13 @@ class ExtendedUserCreationForm(UserCreationForm):
 
 class UserProfileForm(forms.ModelForm):
     class Meta:
-        model = Profile
-        fields=('street_address', 'city', 'state', 'zip_code', 'mobile_number', 'birthdate', 'ssn')
+        model = models.Profile
+        fields=('street_address', 'city', 'state', 'zip_code', 'mobile_number', 'birthdate', 'ssn',)
 
 class AccountForm(forms.ModelForm):
     class Meta:
-        model = Account
+        model = models.Account
         fields=('account_type',)
+
+
         

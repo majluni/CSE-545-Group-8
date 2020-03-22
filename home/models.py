@@ -2,6 +2,9 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from datetime import datetime
+from uuid import uuid4
+from random import randint
 
 
 # Create your models here.
@@ -25,9 +28,8 @@ class Privilege(models.Model):
     def __str__(self):
         return self.user_type
         
-class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    business_name = models.CharField(max_length=50)
+class Profile(models.Model):
+    user = models.OneToOneField(User,related_name="Profile_User", on_delete=models.CASCADE)
     street_address = models.CharField(max_length=20)
     city = models.CharField(max_length=20)
     state = models.CharField(max_length=20)
@@ -35,24 +37,28 @@ class UserProfile(models.Model):
     mobile_number = models.CharField(max_length=10)
     birthdate = models.DateTimeField()
     ssn = models.CharField(max_length=9)
-    user_type = models.CharField(max_length=10)
-    joining_date = models.DateTimeField()
-    privilege_id = models.ForeignKey(Privilege, on_delete=models.CASCADE)
-
+    joining_date = models.DateTimeField(default=datetime.now)
+    
     def __str__(self):
         if self.user:
-            return self.user
+            return self.user.email
         else:
             return self.business_name
 
 class Account(models.Model):
-    account_type = models.CharField(max_length=20)
-    account_balance = models.BigIntegerField()
-    creation_date = models.DateTimeField()
-    user = models.ForeignKey(UserProfile, related_name="Account_User_id", on_delete=models.CASCADE)
+    ACCOUNT_TYPE = (
+    ('savings','SAVINGS'),
+    ('checking', 'CHECKING'),
+    ('credit_card','CREDIT_CARD'),
+    )
+    account_number=models.IntegerField(max_length=10, unique=True, default=randint(0000000000, 9999999999))
+    account_type = models.CharField(max_length=20, choices=ACCOUNT_TYPE)
+    account_balance = models.BigIntegerField(default=0)
+    creation_date = models.DateTimeField(default=datetime.now)
+    user = models.ForeignKey(User,related_name="Account_User_id", on_delete=models.CASCADE)
 
-    def __str__(self):
-        return self.account_type
+    def __int__(self):
+        return self.account_number
 
 class Transaction(models.Model):
     from_account = models.IntegerField()
@@ -61,26 +67,31 @@ class Transaction(models.Model):
     transaction_date = models.DateTimeField()
     transaction_type = models.CharField(max_length=20)
     transaction_status = models.CharField(max_length=20)
-    user = models.ForeignKey(UserProfile, related_name="Transaction_User_id", on_delete=models.CASCADE)
+    user = models.ForeignKey(User, related_name="Transaction_User_id", on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.user
+        return self.user.email
 
 class Appointment(models.Model):
+    ASSIGNED_TYPE = (
+    ('TIER1','TIER1'),
+    ('TIER2', 'TIER2'),
+    ('TIER3','TIER3'),
+    )
     appointment_date = models.DateTimeField()
     appointment_subject = models.TextField()
-    appointment_assigned_to = models.IntegerField()
-    user = models.ForeignKey(UserProfile, related_name="Appointment_User_id", on_delete=models.CASCADE)
+    appointment_assigned_to = models.CharField(max_length=20,choices=ASSIGNED_TYPE)
+    user = models.ForeignKey(User, related_name="Appointment_User", on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.user
+        return self.user.email
 
 class Requests(models.Model):
     request_date = models.DateTimeField()
     request_subject = models.TextField()
     request_assigned_to = models.IntegerField()
     request_type = models.CharField(max_length=20)
-    user = models.ForeignKey(UserProfile,related_name="Requests_User_id", on_delete=models.CASCADE)
+    user = models.ForeignKey(User,related_name="Requests_User_id", on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.user
+        return self.user.email

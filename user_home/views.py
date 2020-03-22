@@ -6,9 +6,12 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
-from .forms import AppointmentForm
+from .forms import AppointmentForm,UserUpdateForm,UserProfileUpdateForm,AccountForm
 from django.http import HttpResponseRedirect
 from django.http import HttpResponse
+from django.urls import reverse
+from django.views.generic.edit import UpdateView
+from home import models
 
 # Create your views here.
 def user_home(request):
@@ -23,7 +26,6 @@ def user_logout(request):
 	return HttpResponseRedirect('/')
 
 def appointment(request):
-    print("yo1")
     if request.method == 'POST':
         form = AppointmentForm(request.POST)
         if form.is_valid():
@@ -37,6 +39,41 @@ def appointment(request):
             return HttpResponseRedirect('/user_home/')
     else:
         form=AppointmentForm()
-    print("yo3")
     context={'form' : form}
     return render(request,'Appointment/appointment.html',context)
+
+def newAccount(request):
+    if request.method == 'POST':
+        acc_form = AccountForm(request.POST)
+        if acc_form.is_valid():
+            a=acc_form.save(commit=False)
+            a.user=request.user
+            a.save()
+            username = request.user.username
+            password = request.user.password
+            ap=authenticate(username=username, password=password)
+            return HttpResponseRedirect('/user_home/')
+    else:
+        acc_form = AccountForm(request.POST)
+    context={'acc_form' : acc_form}
+    return render(request,'profile_update/profile_update.html',context)
+
+def updateProfile(request):
+    if request.method == 'POST':
+        user_form = UserUpdateForm(request.POST)
+        p_form=UserProfileUpdateForm(request.POST)
+        if user_form.is_valid() and p_form.is_valid():
+            u=user_form.save()
+            app=p_form.save(commit=False)
+            app.user=u.user
+            app.save()
+            username = request.user.username
+            password = request.user.password
+            app=authenticate(username=username, password=password)
+            return HttpResponseRedirect('/user_home/')
+    else:
+        user_form = UserUpdateForm()
+        p_form=UserProfileUpdateForm()
+
+    context={'user_form' : user_form, 'p_from' : p_form}
+    return render(request,'profile_update/profile_update.html',context)
