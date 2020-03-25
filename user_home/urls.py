@@ -19,8 +19,12 @@ from django.conf.urls import url
 from django.contrib.auth import views as auth_views
 from django.views.generic.base import TemplateView
 
-app_name = "login"
+app_name = "user_home"
 
 urlpatterns = [
-    path('', views.login_user, name='login_base'),
+    path('', views.user_home, name='user_home'),
+    path('logout/',views.user_logout,name='logout'),
+    path('appointment/',views.appointment,name='appointment'),
+    path('profile_update/',views.updateProfile, name='profile'),
+    path('new_account/',views.newAccount, name='new_account'),
 ]
