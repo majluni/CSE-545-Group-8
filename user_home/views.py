@@ -2,7 +2,6 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.contrib.auth import logout
-<<<<<<< HEAD
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
@@ -14,8 +13,6 @@ from django.urls import reverse
 from django.views.generic.edit import UpdateView
 from home import models
 
-=======
->>>>>>> f607b0f0fea54165698934ab69fd068d56129745
 # Create your views here.
 def user_home(request):
 	if request.user.is_authenticated:
@@ -26,7 +23,6 @@ def user_home(request):
 
 def user_logout(request):
 	logout(request)
-<<<<<<< HEAD
 	return HttpResponseRedirect('/')
 
 def appointment(request):
@@ -78,6 +74,3 @@ def updateProfile(request):
 
     context={'user_form' : user_form}
     return render(request,'profile_update/profile_update.html',context)
-=======
-	return HttpResponseRedirect('/')
->>>>>>> f607b0f0fea54165698934ab69fd068d56129745
