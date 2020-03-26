@@ -19,17 +19,16 @@ from django.conf.urls import url
 from django.contrib.auth import views as auth_views
 from django.views.generic.base import TemplateView
 
-app_name = "user_home"
+app_name = "internal_user"
 
 urlpatterns = [
-<<<<<<< HEAD
-    path('', views.user_home, name='user_home'),
-    path('logout/',views.user_logout,name='logout'),
-    path('appointment/',views.appointment,name='appointment'),
-    path('profile_update/',views.updateProfile, name='profile'),
-    path('new_account/',views.newAccount, name='new_account'),
-=======
-    path('home/', views.user_home, name='user_home'),
-    path('logout/',views.user_logout,name='logout')
->>>>>>> f607b0f0fea54165698934ab69fd068d56129745
+    path('initFundDeposit', views.initFundDeposit, name='init-fund-deposit'),
+    path('searchCustomer', views.searchCustomer, name='search-customer'),
+    path('depositFund', views.depositFund, name='deposit-fund'),
+    path('depositTemplate', views.depositTemplate, name='deposit-template'),
+    path('initIssueCheque', views.initIssueCheque, name='init-issue-cheque'),
+    path('issueChequeTemplate', views.issueChequeTemplate, name='init-issue-cheque'),
+    path('issueCheque', views.issueCheque, name='issue-cheque'),
+    path('initViewCustomer', views.initViewCustomer, name='init-view-customer'),
+    path('viewCustomer', views.viewCustomer, name='view-customer')
 ]

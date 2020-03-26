@@ -19,17 +19,11 @@ from django.conf.urls import url
 from django.contrib.auth import views as auth_views
 from django.views.generic.base import TemplateView
 
-app_name = "user_home"
+app_name = "transactions"
 
 urlpatterns = [
-<<<<<<< HEAD
-    path('', views.user_home, name='user_home'),
-    path('logout/',views.user_logout,name='logout'),
-    path('appointment/',views.appointment,name='appointment'),
-    path('profile_update/',views.updateProfile, name='profile'),
-    path('new_account/',views.newAccount, name='new_account'),
-=======
-    path('home/', views.user_home, name='user_home'),
-    path('logout/',views.user_logout,name='logout')
->>>>>>> f607b0f0fea54165698934ab69fd068d56129745
+    path('initfundTransfer', views.initfundTransfer, name='init-fund-transfer'),
+    path('fundTransfer', views.fundTransfer, name='fund-transfer'),
+    path('pendingTransactions', views.pendingTrans, name='pending-transactions'),
+    path('updateTransaction', views.updateTransaction, name='update-transaction')
 ]

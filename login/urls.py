@@ -23,4 +23,8 @@ app_name = "login"
 
 urlpatterns = [
     path('', views.login_user, name='login_base'),
+<<<<<<< HEAD
+=======
+    path('block/', views.login_block, name='login_block')
+>>>>>>> f607b0f0fea54165698934ab69fd068d56129745
 ]

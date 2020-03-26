@@ -139,6 +139,15 @@ User_Data/
 
 # DS Store
 *.DS_Store
+<<<<<<< HEAD
 debug.log
 debug.log
 debug.log
+=======
+
+#virtualenv
+group_project/
+
+
+
+>>>>>>> f607b0f0fea54165698934ab69fd068d56129745
