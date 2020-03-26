@@ -146,3 +146,9 @@ STATIC_URL = '/static/'
 # Stuff related to session management
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 AUTO_LOGOUT_DELAY_MINS = 1
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'youremail@gmail.com'
+EMAIL_HOST_PASSWORD = 'yourpassword'
+EMAIL_PORT = 587
