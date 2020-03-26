@@ -6,7 +6,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
-from .forms import AppointmentForm,UserUpdateForm,UserProfileUpdateForm,AccountForm
+from .forms import AppointmentForm,UserUpdateForm,AccountForm
 from django.http import HttpResponseRedirect
 from django.http import HttpResponse
 from django.urls import reverse
@@ -56,24 +56,21 @@ def newAccount(request):
     else:
         acc_form = AccountForm(request.POST)
     context={'acc_form' : acc_form}
-    return render(request,'profile_update/profile_update.html',context)
+    return render(request,'new_account/new_account.html',context)
 
 def updateProfile(request):
     if request.method == 'POST':
         user_form = UserUpdateForm(request.POST)
-        p_form=UserProfileUpdateForm(request.POST)
-        if user_form.is_valid() and p_form.is_valid():
-            u=user_form.save()
-            app=p_form.save(commit=False)
-            app.user=u.user
-            app.save()
+        if user_form.is_valid():
+            u=user_form.save(commit=False)
+            u.user=request.user
+            u.save()
             username = request.user.username
             password = request.user.password
             app=authenticate(username=username, password=password)
             return HttpResponseRedirect('/user_home/')
     else:
         user_form = UserUpdateForm()
-        p_form=UserProfileUpdateForm()
 
-    context={'user_form' : user_form, 'p_from' : p_form}
+    context={'user_form' : user_form}
     return render(request,'profile_update/profile_update.html',context)

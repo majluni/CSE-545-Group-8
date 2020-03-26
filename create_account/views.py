@@ -5,6 +5,7 @@ from django.contrib.auth import authenticate, login
 from .forms import ExtendedUserCreationForm, UserProfileForm, AccountForm
 from django.http import HttpResponseRedirect
 from django.http import HttpResponse
+from home.models import Privilege
 
 def homepage(request):
     if request.method == 'POST':
@@ -16,11 +17,12 @@ def homepage(request):
             acc=account_form.save(commit=False)
             profile=profile_form.save(commit=False)
             profile.user=user
+            profile.privilege_id=Privilege.objects.get(user_type="Customer")
             acc.user=profile.user
             profile.save()
             acc.save()
 
-            username = form.cleaned_data.get('email')
+            username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
             user=authenticate(username=username, password=password)
             return HttpResponseRedirect('/login/')
