@@ -19,9 +19,16 @@ from django.conf.urls import url
 from django.contrib.auth import views as auth_views
 from django.views.generic.base import TemplateView
 
-app_name = "login"
+app_name = "internal_user"
 
 urlpatterns = [
-    path('', views.login_user, name='login_base'),
-    path('block/', views.login_block, name='login_block')
+    path('initFundDeposit', views.initFundDeposit, name='init-fund-deposit'),
+    path('searchCustomer', views.searchCustomer, name='search-customer'),
+    path('depositFund', views.depositFund, name='deposit-fund'),
+    path('depositTemplate', views.depositTemplate, name='deposit-template'),
+    path('initIssueCheque', views.initIssueCheque, name='init-issue-cheque'),
+    path('issueChequeTemplate', views.issueChequeTemplate, name='init-issue-cheque'),
+    path('issueCheque', views.issueCheque, name='issue-cheque'),
+    path('initViewCustomer', views.initViewCustomer, name='init-view-customer'),
+    path('viewCustomer', views.viewCustomer, name='view-customer')
 ]

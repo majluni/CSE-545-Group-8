@@ -34,6 +34,9 @@ INSTALLED_APPS = [
     'create_account.apps.CreateAccountConfig',
     'user_home.apps.UserHomeConfig',
     'home.apps.HomeConfig',
+    'crispy_forms',
+    'internal_user.apps.InternalUserConfig',
+    'transactions.apps.TransactionsConfig',
     'login.apps.LoginConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -51,7 +54,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',    
+    'Secure_Bank.middleware.TimeOutLogin',
 ]
 
 ROOT_URLCONF = 'Secure_Bank.urls'
@@ -59,7 +63,7 @@ ROOT_URLCONF = 'Secure_Bank.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates/')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -145,4 +149,8 @@ STATIC_URL = '/static/'
 
 # Stuff related to session management
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-AUTO_LOGOUT_DELAY_MINS = 1
+AUTO_LOGOUT_DELAY_MINS = 5
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+BASE_URL = 'http://localhost:8000'
