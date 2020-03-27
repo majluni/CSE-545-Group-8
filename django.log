@@ -21273,34 +21273,3 @@ django.contrib.auth.models.User.DoesNotExist: User matching query does not exist
 /Users/akshay/Desktop/ASU/Akshay/S:W Security/untitled folder/CSE-545-Group-8/login/views.py changed, reloading.
 Watching for file changes with StatReloader
 Watching for file changes with StatReloader
-Watching for file changes with StatReloader
-"GET /create_account/ HTTP/1.1" 200 3076
-"GET /create_account/ HTTP/1.1" 200 3076
-"GET /admin/auth/user/ HTTP/1.1" 302 0
-"GET /admin/login/?next=/admin/auth/user/ HTTP/1.1" 200 1938
-"GET /admin/login/?next=/admin/auth/user/ HTTP/1.1" 200 1938
-"GET /login/ HTTP/1.1" 200 2250
-"GET /static/main.css HTTP/1.1" 200 822
-"GET /login/ HTTP/1.1" 200 2250
-"POST /login/ HTTP/1.1" 302 0
-"GET /user_home/ HTTP/1.1" 200 361
-"GET /user_home/ HTTP/1.1" 200 361
-"GET /login/ HTTP/1.1" 200 2250
-"GET /login/ HTTP/1.1" 200 2250
-Internal Server Error: /login/
-Traceback (most recent call last):
-  File "/Users/akshay/anaconda3/lib/python3.7/site-packages/django/core/handlers/exception.py", line 34, in inner
-    response = get_response(request)
-  File "/Users/akshay/anaconda3/lib/python3.7/site-packages/django/core/handlers/base.py", line 115, in _get_response
-    response = self.process_exception_by_middleware(e, request)
-  File "/Users/akshay/anaconda3/lib/python3.7/site-packages/django/core/handlers/base.py", line 113, in _get_response
-    response = wrapped_callback(request, *callback_args, **callback_kwargs)
-  File "/Users/akshay/Desktop/ASU/Akshay/S:W Security/untitled folder/CSE-545-Group-8/login/views.py", line 37, in login_user
-    user_instance=User.objects.get(username=form.cleaned_data['user_id'])
-  File "/Users/akshay/anaconda3/lib/python3.7/site-packages/django/db/models/manager.py", line 82, in manager_method
-    return getattr(self.get_queryset(), name)(*args, **kwargs)
-  File "/Users/akshay/anaconda3/lib/python3.7/site-packages/django/db/models/query.py", line 417, in get
-    self.model._meta.object_name
-django.contrib.auth.models.User.DoesNotExist: User matching query does not exist.
-"POST /login/ HTTP/1.1" 500 77388
-"GET /login/ HTTP/1.1" 200 2250
