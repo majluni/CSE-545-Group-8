@@ -1,4 +1,5 @@
 """Secure_Bank URL Configuration
+
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.0/topics/http/urls/
 Examples:
@@ -16,10 +17,13 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
-    path('', include('home.urls')),
+    path('', include('login.urls')),
     path('admin/', admin.site.urls,name='admin'),
-    path('create_account/', include('create_account.urls')),
-    path('create_internal_account/', include('admin.urls')),
+    path('create_account/', include('create_account.urls',namespace='create_account')),
+    path('create_internal_account/', include('internal_account_creation.urls')),
     path('login/', include('login.urls')),
     path('user_home/', include('user_home.urls')),
+    path('transaction/', include('transactions.urls')),
+    path('internal_user/', include('internal_user.urls')),
+    path('admin_app/', include('admin_app.urls'))
 ]

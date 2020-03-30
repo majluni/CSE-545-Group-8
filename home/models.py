@@ -7,7 +7,7 @@ from uuid import uuid4
 from random import randint
 
 
-# Create your models here.
+
 class Privilege(models.Model):
     view_transaction = models.BooleanField()
     create_transaction = models.BooleanField()
@@ -20,30 +20,41 @@ class Privilege(models.Model):
     modify_account = models.BooleanField()
     close_account = models.BooleanField()
     delete_account = models.BooleanField()
-    account_type = models.CharField(max_length=20)
-    request_type = models.CharField(max_length=20)
     access_logs = models.BooleanField()
     user_type = models.CharField(max_length=10)
 
     def __str__(self):
         return self.user_type
-        
+
+class PendingProfileUpdate(models.Model):
+    first_name=models.CharField(max_length=20)
+    last_name=models.CharField(max_length=20)
+    street_address = models.CharField(max_length=20)
+    city = models.CharField(max_length=20)
+    state = models.CharField(max_length=20)
+    zip_code = models.IntegerField()
+    mobile_number = models.CharField(max_length=10,unique=True)
+    username = models.CharField(max_length=20,unique=True)
+
+    def __str__(self):
+            return self.username
+
 class Profile(models.Model):
     user = models.OneToOneField(User,related_name="Profile_User", on_delete=models.CASCADE)
     street_address = models.CharField(max_length=20)
     city = models.CharField(max_length=20)
     state = models.CharField(max_length=20)
     zip_code = models.IntegerField()
-    mobile_number = models.CharField(max_length=10)
+    mobile_number = models.CharField(max_length=10,unique=True)
     birthdate = models.DateTimeField()
-    ssn = models.CharField(max_length=9)
+    ssn = models.CharField(max_length=9,unique=True)
     joining_date = models.DateTimeField(default=datetime.now)
+    flag = models.BooleanField(default=False)
+    privilege_id=models.ForeignKey(Privilege,related_name='ProfilePrivilege',on_delete=models.CASCADE,default='')
     
     def __str__(self):
         if self.user:
-            return self.user.email
-        else:
-            return self.business_name
+            return self.user.username
 
 class Account(models.Model):
     ACCOUNT_TYPE = (
@@ -51,11 +62,13 @@ class Account(models.Model):
     ('checking', 'CHECKING'),
     ('credit_card','CREDIT_CARD'),
     )
-    account_number=models.IntegerField(max_length=10, unique=True, default=randint(0000000000, 9999999999))
+    account_number=models.AutoField(primary_key=True)
     account_type = models.CharField(max_length=20, choices=ACCOUNT_TYPE)
-    account_balance = models.BigIntegerField(default=0)
+    account_balance = models.FloatField(default=0)
     creation_date = models.DateTimeField(default=datetime.now)
     user = models.ForeignKey(User,related_name="Account_User_id", on_delete=models.CASCADE)
+    flag = models.BooleanField(default=False)
+    delete = models.BooleanField(default=False)
 
     def __int__(self):
         return self.account_number
@@ -70,7 +83,7 @@ class Transaction(models.Model):
     user = models.ForeignKey(User, related_name="Transaction_User_id", on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.user.email
+        return self.user.username
 
 class Appointment(models.Model):
     ASSIGNED_TYPE = (
@@ -84,7 +97,7 @@ class Appointment(models.Model):
     user = models.ForeignKey(User, related_name="Appointment_User", on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.user.email
+        return self.user.username
 
 class Requests(models.Model):
     request_date = models.DateTimeField()
@@ -94,7 +107,7 @@ class Requests(models.Model):
     user = models.ForeignKey(User,related_name="Requests_User_id", on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.user.email
+        return self.user.username
 
 class Tiers(models.Model):
     ASSIGNED_TYPE = (
@@ -103,7 +116,6 @@ class Tiers(models.Model):
     ('TIER3','TIER3'),
     )
     tier_status = models.CharField(max_length=20,choices=ASSIGNED_TYPE)
-    # user = models.ForeignKey(User, related_name="Appointment_User", on_delete=models.CASCADE)
 
     def __str__(self):
         return self.user.email
