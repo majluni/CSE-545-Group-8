@@ -90,10 +90,7 @@ def login_user(request):
                 return verify_otp(request)
     else:
         form = LoginForm()
-    d1 = timezone.now()
-    history_time = d1.strftime("%Y-%m-%d")
-    history = AllLogin(user = 'user_id', date = history_time )
-    history.save()
+
 
 
 
@@ -112,6 +109,10 @@ def verify_otp(request):
             if form.cleaned_data['otp'] == request.session['token']:
                 userObj = authenticate(username=request.session['username'], password=request.session['password'])
                 login(request,userObj)
+                d1 = timezone.now()
+                history_time = d1.strftime("%Y-%m-%d")
+                history = AllLogin(user='user_id', date=history_time)
+                history.save()
                 request.session['last_activity'] = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
                 return HttpResponseRedirect('http://127.0.0.1:8000/user_home')
         return HttpResponse("Login Failed!! Wrong OTP")
