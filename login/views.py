@@ -16,6 +16,8 @@ from django.core.mail import EmailMessage
 from django.utils.encoding import force_text
 from random import randint
 from django.urls import reverse
+from home.models import AllLogin
+from django.utils import timezone
 
 
 #try wrong account list ------ username: number of try
@@ -28,6 +30,7 @@ def login_user(request):
     global block_wait_list
     global block_list
     try_times=0
+
     if request.method=='POST':
         form = LoginForm(request.POST)
 
@@ -87,8 +90,15 @@ def login_user(request):
                 return verify_otp(request)
     else:
         form = LoginForm()
+    d1 = timezone.now()
+    history_time = d1.strftime("%Y-%m-%d")
+    history = AllLogin(user = 'user_id', date = history_time )
+    history.save()
+
+
 
     return render(request, 'login.html', {'form':form})
+
 
 def login_block(request):
     return HttpResponse("Login block!!need wait for")
