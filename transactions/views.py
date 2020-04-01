@@ -44,6 +44,7 @@ transactionList = [
 
 def fund_deposit(request):
     """Deposits the given amount of money into the specified bank account"""
+    user_id = Account.objects.get(username=request.user.username).id
     if request.method == 'POST':
         form = FundDepositWithdrawForm(request.POST)
         if form.is_valid():
@@ -53,13 +54,22 @@ def fund_deposit(request):
 
             # Check that account was found
             if account_object is not None:
-                account_object.account_balance += amount
-                account_object.save()
+                transaction_object = Transaction(from_account="deposit", to_account=account,
+                                                 transaction_date="{:%a, %B %d, %Y %I:%M:%S %p}".format(datetime.now()),
+                                                 transaction_value=amount,
+                                                 transaction_type="Deposit", transaction_status="Needs approval",
+                                                 user=user_id)
+                transaction_object.save()
                 return render(request, 'success.html')
             else:
                 return render(request, 'failed.html', {'failure': '500 Error: Account not found.'}, status=500)
     elif request.method == 'GET':
-        return render(request, 'deposit.html')
+        user_id = Account.objects.get(username=request.user.username).id
+        accounts_list = Account.objects.filter(user=user_id)
+        accounts = []
+        for account in accounts_list:
+            accounts.append({"number": account.account_number, "type": account.account_type})
+        return render(request, 'deposit.html', {"accounts": accounts})
     else:
         return render(request, 'failed.html', {'failure': '405 Error: Method not supported.'}, status=405)
 
@@ -77,18 +87,27 @@ def fund_withdraw(request):
             if account_object is not None:
                 # Check for adequate funds
                 if account_object.account_balance >= amount:
-                    account_object.account_balance -= amount
-                    account_object.save()
-                    return render(request, 'success.html')
+                    transaction_object = Transaction(from_account=account, to_account="Withdraw",
+                                                     transaction_date="{:%a, %B %d, %Y %I:%M:%S %p}".format(
+                                                         datetime.now()),
+                                                     transaction_value=amount,
+                                                     transaction_type="Withdraw", transaction_status="Needs approval",
+                                                     user=Account.objects.get(username=request.user.username).id)
+                    transaction_object.save()
                 else:
-                    return render(request, 'failed.html',  {'failure': '403 Error: Account balance too small.'},
+                    return render(request, 'failed.html', {'failure': '403 Error: Account balance too small.'},
                                   status=403)
             else:
                 return render(request, 'failed.html', {'failure': '500 Error: Account not found.'}, status=500)
         else:
             return render(request, 'failed.html', {'failure': '400 Error: Bad request.'}, status=400)
     elif request.method == 'GET':
-        return render(request, 'withdraw.html')
+        user_id = Account.objects.get(username=request.user.username).id
+        accounts_list = Account.objects.filter(user=user_id)
+        accounts = []
+        for account in accounts_list:
+            accounts.append({"number": account.account_number, "type": account.account_type})
+        return render(request, 'withdraw.html', {"accounts": accounts})
     else:
         return render(request, 'failed.html', {'failure': '405 Error: Method not supported.'}, status=405)
 
