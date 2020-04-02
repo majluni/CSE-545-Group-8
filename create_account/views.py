@@ -17,7 +17,6 @@ from .tokens import account_activation_token
 from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
 from django.utils.encoding import force_text
-from twilio.rest import Client
 from django.conf import settings
 from random import randint
 import time
@@ -77,7 +76,10 @@ def activate(request, uidb64, token):
         user.delete()
         return HttpResponse('Activation link has expired!')
     if user is not None and account_activation_token.check_token(user, token):
-        return HttpResponseRedirect('/create_account/phone_otp')
+        user_instance = User.objects.get(username=request.session['user'])
+        user_instance.is_active = True
+        user_instance.save()
+        return HttpResponseRedirect('/login')
     else:
         user.delete()
         return HttpResponse('Activation link is invalid!')
@@ -99,9 +101,6 @@ def phone_otp(request):
         return HttpResponse("Registration Failed!! Wrong OTP")
     else:
         form = Otp()
-        to = request.session['mobile_number']
-        client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
-        response = client.messages.create(body=request.session['token'], to=to, from_=settings.TWILIO_PHONE_NUMBER)
         context={'form' : form}
         return render(request,'phone_otp/phone_otp.html',context)
         

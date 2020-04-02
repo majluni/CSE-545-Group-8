@@ -147,3 +147,5 @@ group_project/
 
 
 debug.log
+.idea/
+pyvenv.cfg

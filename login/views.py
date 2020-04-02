@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.http import HttpResponse
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from datetime import datetime
 from create_account import forms
 from home.models import User,Profile
@@ -31,6 +31,10 @@ block_list={}
 
 
 def login_user(request):
+
+    if request.user is not None:
+        logout(request)
+
     global block_wait_list
     global block_list
     global otp_expiry
