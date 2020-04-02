@@ -52,6 +52,17 @@
                 </div>
             </div>
             <div class="col-md-8">
+                <div class="content-section">
+                    {% for account in accounts %}
+                        <div>
+                            <p>{{ account.account_type }}</p>
+                            <p>{{ account.account_number }}</p>
+                            <p>{{ account.account_balance }}</p>
+                        </div>
+                        <br>
+                        <br>
+                    {% endfor %}
+                </div>
                 {% if messages %} {% for message in messages%}
                 <div class="alert alert-{{message.tags}}">
                     {{ message }}
