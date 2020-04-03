@@ -168,4 +168,3 @@ def forgot_password(request):
         context={'form' : form}
         return render(request,'forgot_password.html',context)
     return HttpResponse("Try again")
-

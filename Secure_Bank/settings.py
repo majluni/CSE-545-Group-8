@@ -31,7 +31,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-     'django_twilio',
     'admin_app.apps.AdminAppConfig',
     'create_account.apps.CreateAccountConfig',
     'user_home.apps.UserHomeConfig',
@@ -145,7 +144,7 @@ LOGGING = {
         },
     },
     'loggers': {
-        'django.request': {
+        'django': {
             # 'handlers': ['mail_admins'],
             'handlers': ['console', 'file'],
             'level': 'ERROR',
