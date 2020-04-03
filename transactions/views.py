@@ -207,7 +207,8 @@ def initfundTransfer(request):
 def pendingTrans(request):
     pending = Pending_Transactions.objects.all()
     context = {
-        'pending': pending
+        'pending': pending,
+        'basehtml':getBaseHtml((request))
     }
     return render(request, 'pendingTransactions.html', context)
 

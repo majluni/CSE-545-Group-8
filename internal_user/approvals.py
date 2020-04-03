@@ -10,6 +10,20 @@ from home.models import Account
 from django.contrib.auth.models import User
 from home.models import PendingProfileUpdate
 
+def getBaseHtml(request):
+    try:
+        profile_instance = Profile.objects.get(user=request.user)
+        if profile_instance.privilege_id.user_type == settings.SB_USER_TYPE_CUSTOMER:
+            basehtml = "customer_homepage.html"
+        elif profile_instance.privilege_id.user_type == settings.SB_USER_TYPE_TIER_1:
+            basehtml = "tier1_homepage.html"
+        elif profile_instance.privilege_id.user_type == settings.SB_USER_TYPE_TIER_2:
+            basehtml = "tier2_homepage.html"
+        else:
+            basehtml = "base.html"
+    except:
+        basehtml = "base.html"
+    return basehtml
 
 def getUnapprovedProfiles():
     unapproved_profiles = Profile.objects.filter(flag=False)
@@ -69,7 +83,7 @@ def _viewRequests(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect('/')
     
-    context = {}
+    context = {'basehtml': getBaseHtml(request)}
 
     if request.user.Profile_User.privilege_id.user_type == settings.SB_USER_TYPE_TIER_1 or request.user.Profile_User.privilege_id.user_type == settings.SB_USER_TYPE_TIER_2:
         profile_list = getUnapprovedProfiles()
@@ -91,7 +105,7 @@ def _viewInternalRequests(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect('/')
     
-    context = {}
+    context = {'basehtml': getBaseHtml(request)}
 
     if request.user.Profile_User.privilege_id.user_type == settings.SB_USER_TYPE_TIER_3:
         profile_list = getUnapprovedInternalProfiles()
@@ -105,7 +119,7 @@ def _viewInternalRequests(request):
 
 
 def _view_updates(request):
-    context = {}
+    context = {'basehtml': getBaseHtml(request)}
     if not request.user.is_authenticated:
         return HttpResponseRedirect('/')
 
@@ -120,7 +134,7 @@ def _view_updates(request):
 
 
 def _view_open_accs(request):
-    context = {}
+    context = {'basehtml': getBaseHtml(request)}
     if not request.user.is_authenticated:
         return HttpResponseRedirect('/')
 
@@ -136,7 +150,7 @@ def _view_open_accs(request):
 
 
 def _view_close_accs(request):
-    context = {}
+    context = {'basehtml': getBaseHtml(request)}
     if not request.user.is_authenticated:
         return HttpResponseRedirect('/')
 
