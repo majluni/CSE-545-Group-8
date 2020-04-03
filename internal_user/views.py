@@ -6,7 +6,7 @@ from .forms import FundDepositForm, IssueChequeForm, CustomerForm
 from django.conf import settings
 from internal_user.approvals import _viewRequests, _updateRequest
 from internal_user.utils import render_to_pdf,verify_file
-from home.models import Account, Cheque
+from home.models import Account, Cheques
 from transactions.models import Transaction
 import requests
 
