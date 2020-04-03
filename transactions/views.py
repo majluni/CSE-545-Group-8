@@ -28,6 +28,7 @@ from django.core.mail import EmailMessage
 import time
 from home.models import Profile
 from home import models
+from django.http.response import HttpResponseRedirect
 
 
 def getBaseHtml(request):
@@ -95,16 +96,16 @@ def fundTransfer(request):
                         messages.success(request, f'Fund transfer in review {transferAmount}')
                     transaction_id.transaction_id += 1
                     transaction_id.save()
-                    return redirect(settings.BASE_URL+'/user_home')
+                    return HttpResponseRedirect(settings.BASE_URL+'/user_home')
                 else:
-                    messages.error(request, f'Form is not valid')
-                    return redirect(settings.BASE_URL + '/user_home')
-            else:
-                return render(request, 'failed.html', {'failure': '403 Error: Account balance too small.'},
+                    return render(request, 'failedAmount.html', {'failure': '403 Error: Account balance too small.'},
                                     status=403)
+            else:
+                messages.error(request, f'Form is not valid')
+                return HttpResponseRedirect(settings.BASE_URL+'/user_home')
         else:
             messages.error(request, f'Form is not valid')
-            return redirect(settings.BASE_URL+'/user_home')
+            return HttpResponseRedirect(settings.BASE_URL+'/user_home')
     else:
         token=randint(10000,99999)
         to_email=request.user.email
@@ -281,7 +282,7 @@ def updateTransaction(request):
                 account.save()
             elif pending.from_account != 'self':
                 account = Account.objects.get(account_number=pending.from_account)
-                if pending.transaction_type == 'Withdraw' and account.account_balance > pending.transferAmount:
+                if pending.transaction_type == 'Withdraw' and account.account_balance > pending.transaction_value:
                     account.account_balance -= float(pending.transaction_value)
                     account.save()
                 else:
@@ -335,9 +336,10 @@ def generateStatements(request):
                 pdf.ln(row_height * spacing)
             filename = '{}-{}.pdf'.format(account_object.account_number, datetime.now())
             pdf.output('./transactions/statements/' + filename)
+            filepath = './transactions/statements/' + filename
             # fill these variables with real values
             sign_file('private.key', filename)
-            with open('./transactions/statements/' + filename, 'rb') as pdf:
+            with open(filepath, 'rb') as pdf:
                 response = HttpResponse(pdf, content_type='application/pdf')
                 response['Content-Disposition'] = "attachment; filename=%s" % filename
                 return response
@@ -350,6 +352,9 @@ def generateStatements(request):
             accounts.append({"number": account.account_number, "type": account.account_type})
         return render(request, 'statements.html', {"accounts": accounts})
 
+def redirectToHome(request):
+    if request.method == 'POST':
+        return HttpResponseRedirect(settings.BASE_URL+'/user_home')
 
 # generate key function
 # generate private key and public key
@@ -399,7 +404,8 @@ def sign_file(private_key, file_name):
         )
     # Load the contents of the file to be signed.
     # file_name='statement.txt'
-    with open(file_name, 'rb') as f:
+    filepath = './transactions/statements/' + file_name
+    with open(filepath, 'rb') as f:
         payload = f.read()
 
     # Sign the payload file.
@@ -414,7 +420,7 @@ def sign_file(private_key, file_name):
             hashes.SHA256(),
         )
     )
-    with open(file_name, 'wb') as f:
+    with open('./transactions/signatures/' + file_name.split('.')[0] + '.sig', 'wb') as f:
         f.write(signature)
     return
 
