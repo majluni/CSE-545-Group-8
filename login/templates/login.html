@@ -17,7 +17,8 @@
         <div class="container">
             <div class="navbar-nav float-right">
               <a class="nav-item nav-link " href="/">Login</a>
-              <a class="nav-item nav-link " href="/create_account">Register</a>
+              <a class="nav-item nav-link " href="/create_account">Customer Register</a>
+                <a class="nav-item nav-link " href="/create_internal_account">Employee Register</a>
               <a class="nav-item nav-link " href="/login/forgot_password">Forgot Password</a>
             </div>
         </div>
@@ -29,7 +30,7 @@
             <form action='/' method="post" class="form-group">
               {% csrf_token %}
               {{ form|crispy}}
-  	          <input type="submit" value = "Submit" >
+  	          <input type="submit" value = "Login" >
             </form>
         </div>
       </div>
