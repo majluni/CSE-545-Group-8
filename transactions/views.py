@@ -43,10 +43,12 @@ def getBaseHtml(request):
             basehtml = "base.html"
     except:
         basehtml = "base.html"
+    return basehtml
 
 
 def fundTransfer(request):
-
+    basehtml = getBaseHtml(request)
+    print(basehtml)
     if request.method == 'POST':
         form = FundTransferForm(request.POST)
         if form.is_valid():
@@ -117,7 +119,8 @@ def fundTransfer(request):
         email.send()
         request.session['token']=token
         request.session['otp_expiry']=time.time()
-        return render(request, 'fundTransfer.html')
+        return render(request, 'fundTransfer.html',{'basehtml':basehtml})
+
 
 def fund_deposit(request):
     """Deposits the given amount of money into the specified bank account"""
