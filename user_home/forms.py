@@ -20,4 +20,5 @@ class AccountForm(forms.ModelForm):
 
 class AccountDeleteForm(forms.Form):
     account_number=forms.IntegerField()
+
         

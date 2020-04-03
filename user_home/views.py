@@ -16,12 +16,13 @@ import logging
 log = logging.getLogger(__name__)
 from transactions import views as v
 
+
 # Create your views here.
 def user_home(request):      
     profile_instance = models.Profile.objects.get(user=request.user)
     if request.user.is_authenticated and request.user.is_active and profile_instance.privilege_id.user_type=="Customer" and profile_instance.flag==1:
 		# return HttpResponse('Session established')
-        return render(request, 'user_homepage.html', {'username':request.user.username})
+        return render(request, 'customer_homepage.html', {'username':request.user.username})
     else:
         return HttpResponse('Try again!')
 
@@ -106,20 +107,34 @@ def updateProfile(request):
         context={'user_form' : user_form}
         return render(request,'profile_update/profile_update.html',context)
     else:
-            return HttpResponse("Login Failed!! Wrong username or password")
+        return HttpResponse("Login Failed!! Wrong username or password")
 
 
 def default_fund_deposit(request):
     profile_instance = models.Profile.objects.get(user=request.user)
     if request.user.is_authenticated and request.user.is_active and profile_instance.privilege_id.user_type=="Customer" and profile_instance.flag==1:
         return v.fund_deposit(request)
+    else:
+        return HttpResponse("Login Failed!! Wrong username or password")
 
 def default_fund_withdraw(request):
     profile_instance = models.Profile.objects.get(user=request.user)
     if request.user.is_authenticated and request.user.is_active and profile_instance.privilege_id.user_type=="Customer" and profile_instance.flag==1:
         return v.fund_withdraw(request)
+    else:
+        return HttpResponse("Login Failed!! Wrong username or password")
 
 def default_get_statements(request):
     profile_instance = models.Profile.objects.get(user=request.user)
     if request.user.is_authenticated and request.user.is_active and profile_instance.privilege_id.user_type=="Customer" and profile_instance.flag==1:
         return v.generateStatements(request)
+    else:
+        return HttpResponse("Login Failed!! Wrong username or password")
+
+
+def default_fundTransfer(request):
+    profile_instance = models.Profile.objects.get(user=request.user)
+    if request.user.is_authenticated and request.user.is_active and profile_instance.privilege_id.user_type=="Customer" and profile_instance.flag==1:
+        return v.fundTransfer(request)
+    else:
+        return HttpResponse("Login Failed!! Wrong username or password")
