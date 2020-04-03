@@ -69,7 +69,7 @@ def _viewRequests(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect('/')
     
-    context = {}
+    context = {'basehtml': getBaseHtml(request)}
 
     if request.user.Profile_User.privilege_id.user_type == settings.SB_USER_TYPE_TIER_1 or request.user.Profile_User.privilege_id.user_type == settings.SB_USER_TYPE_TIER_2:
         profile_list = getUnapprovedProfiles()
@@ -92,12 +92,11 @@ def _viewInternalRequests(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect('/')
     
-    context = {}
+    context = {'basehtml': getBaseHtml(request)}
 
     if request.user.Profile_User.privilege_id.user_type == settings.SB_USER_TYPE_TIER_3:
         profile_list = getUnapprovedInternalProfiles()
         context['unapproved_internal_profiles'] = profile_list
-        context['basehtml'] = getBaseHtml(request)
     else:
         return HttpResponse("<h1>Error: 403 Forbidden</h1>")
 
@@ -106,14 +105,13 @@ def _viewInternalRequests(request):
 
 
 def _view_updates(request):
-    context = {}
+    context = {'basehtml': getBaseHtml(request)}
     if not request.user.is_authenticated:
         return HttpResponseRedirect('/')
 
     if request.user.Profile_User.privilege_id.user_type == settings.SB_USER_TYPE_TIER_1 or request.user.Profile_User.privilege_id.user_type == settings.SB_USER_TYPE_TIER_2:
         updates_list = get_unapproved_updates()
         context['unapproved_updates'] = updates_list
-        context['basehtml'] = getBaseHtml(request)
     else:
         return HttpResponse("<h1>Error: 403 Forbidden</h1>")
 
@@ -121,14 +119,13 @@ def _view_updates(request):
 
 
 def _view_open_accs(request):
-    context = {}
+    context = {'basehtml': getBaseHtml(request)}
     if not request.user.is_authenticated:
         return HttpResponseRedirect('/')
 
     if request.user.Profile_User.privilege_id.user_type == settings.SB_USER_TYPE_TIER_1 or request.user.Profile_User.privilege_id.user_type == settings.SB_USER_TYPE_TIER_2:
         accs_list = get_open_account_requests()
         context['open_accs'] = accs_list
-        context['basehtml'] = getBaseHtml(request)
     else:
         return HttpResponse("<h1>Error: 403 Forbidden</h1>")
 
@@ -137,14 +134,13 @@ def _view_open_accs(request):
 
 
 def _view_close_accs(request):
-    context = {}
+    context = {'basehtml': getBaseHtml(request)}
     if not request.user.is_authenticated:
         return HttpResponseRedirect('/')
 
     if request.user.Profile_User.privilege_id.user_type == settings.SB_USER_TYPE_TIER_1 or request.user.Profile_User.privilege_id.user_type == settings.SB_USER_TYPE_TIER_2:
         accs_list = get_close_account_requests()
         context['close_accs'] = accs_list
-        context['basehtml'] = getBaseHtml(request)
     else:
         return HttpResponse("<h1>Error: 403 Forbidden</h1>")
 

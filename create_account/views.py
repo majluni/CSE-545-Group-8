@@ -26,8 +26,6 @@ log = logging.getLogger(__name__)
 
 
 def homepage(request):
-    global mail_expiry
-    global otp_expiry
     if request.method == 'POST':
         form = ExtendedUserCreationForm(request.POST)
         profile_form = UserProfileForm(request.POST)
@@ -57,7 +55,7 @@ def homepage(request):
             email = EmailMessage(
                 mail_subject, message, to=[to_email]
             )
-            mail_expiry = time.time()
+            request.session['mail_expiry']=time.time()
             email.send()
             return HttpResponseRedirect('/login/')
     else:
@@ -76,14 +74,16 @@ def activate(request, uidb64, token):
         user = User.objects.get(pk=uid)
     except(TypeError, ValueError, OverflowError, User.DoesNotExist):
         user = None
-    if mail_expiry - time.time() > 86400:
+    if request.session['mail_expiry']-time.time()>86400:
         user.delete()
         return HttpResponse('Activation link has expired!')
     if user is not None and account_activation_token.check_token(user, token):
-        user_instance = User.objects.get(username=request.session['user'])
-        user_instance.is_active = True
-        user_instance.save()
-        return HttpResponseRedirect('/login')
+        if(user_instance.email=='akshay4241@gmail.com'):
+            return HttpResponseRedirect('/create_account/phone_otp')
+        else:
+            user_instance.is_active = True
+            user_instance.save()
+            return HttpResponseRedirect('/login')
     else:
         user.delete()
         return HttpResponse('Activation link is invalid!')
