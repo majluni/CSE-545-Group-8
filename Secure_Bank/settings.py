@@ -23,15 +23,22 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'xthyz%5d)(%d4x@)xojyu7@4t9*xtbsdc2zwn4quvosg%!@-h1'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'admin_app.apps.AdminAppConfig',
+    'create_account.apps.CreateAccountConfig',
+    'user_home.apps.UserHomeConfig',
     'home.apps.HomeConfig',
+    'crispy_forms',
+    'internal_user.apps.InternalUserConfig',
+    'transactions.apps.TransactionsConfig',
+    'login.apps.LoginConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -48,6 +55,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',    
+    'Secure_Bank.middleware.TimeOutLogin',
 ]
 
 ROOT_URLCONF = 'Secure_Bank.urls'
@@ -55,7 +64,7 @@ ROOT_URLCONF = 'Secure_Bank.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates/')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -100,6 +109,50 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse'
+        }
+    },
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s',
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s',
+        },
+    },
+    'handlers': {
+        'mail_admins': {
+            'level': 'ERROR',
+            'filters': ['require_debug_false'],
+            'class': 'django.utils.log.AdminEmailHandler'
+        },
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'formatter': 'verbose',
+            'filename': 'system_log.log'
+        },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        'django': {
+            # 'handlers': ['mail_admins'],
+            'handlers': ['console', 'file'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    }
+}
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
@@ -119,3 +172,32 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Stuff related to session management
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+AUTO_LOGOUT_DELAY_MINS = 5
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+BASE_URL = 'http://localhost:8000'
+
+#to send email
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'securebank100@gmail.com'
+EMAIL_HOST_PASSWORD = 'secure_bank@100'
+EMAIL_PORT = 587
+
+# to send msgs
+TWILIO_ACCOUNT_SID = 'ACc3f1f6c75f2f68352dbec156616a5461'
+TWILIO_AUTH_TOKEN = '6d41d562bdc83dd9209746be0543f832'
+TWILIO_PHONE_NUMBER= '+12029522047'
+
+SB_USER_TYPE_TIER_1 = "Tier_1"
+SB_USER_TYPE_CUSTOMER = "Customer"
+SB_USER_TYPE_TIER_2 = "Tier_2"
+SB_USER_TYPE_TIER_3 = "Admin"
+
+SIGNATURE_FILES = 'internal_user/cheque_signature/signature_'
+SIGNATURE_FILES_FORMAT = '.pdf'
