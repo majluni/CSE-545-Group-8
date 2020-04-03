@@ -29,7 +29,8 @@ def internal_homepage(request):
             acc=tier.save(commit=False)
             profile=profile_form.save(commit=False)
             profile.user=user
-            profile.privilege_id=Privilege.objects.get(user_type=acc)
+            ptint(acc)
+            profile.privilege_id=Privilege.objects.get(user_type=acc.cleaned_data['tier_status'])
             acc.user=profile.user
             profile.save()
             acc.save()
